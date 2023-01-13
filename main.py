@@ -57,8 +57,33 @@ class ApiDirectory(Resource):
         return self.directory.__delete__()
 
 
+class ApiBinary(Resource):
+    def __init__(self):
+        self.binary = binary
+
+    def get(self):
+        return self.binary.__read__()
+
+    def post(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        self.binary = BinaryFile(data["name"], data["information"], parent_directory)
+        return jsonify({
+            'Message': 'The BinaryFile was created successfully'
+        })
+
+    def put(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        return self.binary.__move__(parent_directory)
+
+    def delete(self):
+        return self.binary.__delete__()
+
+
 api.add_resource(ApiServerWork, '/')
 api.add_resource(ApiDirectory, '/directory')
+api.add_resource(ApiBinary, '/binary')
 
 
 if __name__ == '__main__':
