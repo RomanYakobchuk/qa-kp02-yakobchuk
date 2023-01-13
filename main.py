@@ -33,7 +33,8 @@ buffer = BufferFile(fileName, maxFileSize)
 
 
 class ApiServerWork(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         return "Server work"
 
 
@@ -109,10 +110,39 @@ class ApiLogTextFile(Resource):
         return self.logText.__delete__()
 
 
+class ApiBuffer(Resource):
+    def __init__(self):
+        self.buffer = buffer
+
+    def get(self):
+        return self.buffer.__consume__()
+
+    def post(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        self.buffer = BufferFile(data["name"], data["maxFileSize"], parent_directory)
+        return jsonify({
+            'Message': 'The BufferFile was created successfully'
+        })
+
+    def put(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        return self.buffer.__move__(parent_directory)
+
+    def patch(self):
+        data = json.loads(request.data)
+        return self.buffer.__push__(data["element"])
+
+    def delete(self):
+        return self.buffer.__delete__()
+
+
 api.add_resource(ApiServerWork, '/')
 api.add_resource(ApiDirectory, '/directory')
 api.add_resource(ApiBinary, '/binary')
 api.add_resource(ApiLogTextFile, '/log')
+api.add_resource(ApiBuffer, '/buffer')
 
 
 if __name__ == '__main__':
