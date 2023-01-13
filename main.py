@@ -81,9 +81,38 @@ class ApiBinary(Resource):
         return self.binary.__delete__()
 
 
+class ApiLogTextFile(Resource):
+    def __init__(self):
+        self.logText = log
+
+    def get(self):
+        return self.logText.__read__()
+
+    def post(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        self.logText = LogTextFile(data["name"], parent_directory)
+        return jsonify({
+            'Message': 'The LogTextFile was created successfully'
+        })
+
+    def put(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        return self.logText.__move__(parent_directory)
+
+    def patch(self):
+        data = request.get_json()
+        return self.logText.__log__(data["line"])
+
+    def delete(self):
+        return self.logText.__delete__()
+
+
 api.add_resource(ApiServerWork, '/')
 api.add_resource(ApiDirectory, '/directory')
 api.add_resource(ApiBinary, '/binary')
+api.add_resource(ApiLogTextFile, '/log')
 
 
 if __name__ == '__main__':
