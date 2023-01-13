@@ -50,15 +50,13 @@ class ApiDirectory(Resource):
             'Message': 'The Directory was created successfully'
         })
 
+    def put(self):
+        data = request.get_json()
+        parent_directory = Directory(data["parent"])
+        return self.directory.__move__(parent_directory)
 
-def put(self):
-    data = request.get_json()
-    parent_directory = Directory(data["parent"])
-    return self.directory.__move__(parent_directory)
-
-
-def delete(self):
-    return self.directory.__delete__()
+    def delete(self):
+        return self.directory.__delete__()
 
 
 class ApiBinary(Resource):
