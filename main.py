@@ -10,26 +10,7 @@ from bufferFile import BufferFile
 app = Flask(__name__)
 api = Api(app)
 
-parentDirectory = Directory('root')
 
-# directory
-directoryName = 'item_1'
-maxElements = 20
-directory = Directory(directoryName, maxElements)
-
-# binary
-fileName = 'binary file'
-information = 'binary information'
-binary = BinaryFile(fileName, information, parentDirectory)
-
-# logTextFile
-fileName = 'item_1'
-log = LogTextFile(fileName, parentDirectory)
-
-# buffer
-fileName = 'buffer_1'
-maxFileSize = 20
-buffer = BufferFile(fileName, maxFileSize)
 
 
 class ApiServerWork(Resource):
